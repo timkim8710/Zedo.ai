@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zedo AI | Cosmic Core</title>
+    <title>Zedo AI | Universal Core</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -11,7 +11,7 @@
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
             <h1 class="logo-text">Zedo<span>.core</span></h1>
-            <p id="authStatusText">Neural connection required to proceed.</p>
+            <p id="authStatusText">Initialize Neural Link</p>
             <button id="loginBtn" class="google-btn">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
                 <span id="btnText">Sign up with Google</span>
@@ -28,16 +28,21 @@
 
             <div class="sidebar-content">
                 <div class="section">
-                    <p class="section-label">Sync Data</p>
+                    <p class="section-label">Data Transmission</p>
                     <label for="fileInput" class="import-card">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                        <span>Upload Log (.txt)</span>
+                        <span>Upload Private Log</span>
                         <input type="file" id="fileInput" accept=".txt">
                     </label>
                 </div>
 
                 <div class="section">
-                    <p class="section-label">Your Knowledge Logs</p>
+                    <p class="section-label">Global Knowledge (Shared)</p>
+                    <ul id="globalNotesList" class="notes-stack global-style"></ul>
+                </div>
+
+                <div class="section">
+                    <p class="section-label">Private Vault</p>
                     <ul id="notesList" class="notes-stack"></ul>
                 </div>
             </div>
@@ -56,23 +61,21 @@
         <main class="workspace">
             <div id="chatDisplay" class="chat-viewport">
                 <div class="welcome-banner">
-                    <h2>Welcome to the Core.</h2>
-                    <p>Transmit a query to begin analysis of your private logs.</p>
+                    <h2>Core Online.</h2>
+                    <p>Analyzing both global data and your private logs.</p>
                 </div>
             </div>
 
             <div class="input-zone">
                 <div class="command-bar">
-                    <input type="text" id="userInput" placeholder="Ask Zedo about your logs..." autocomplete="off">
+                    <input type="text" id="userInput" placeholder="Ask Zedo anything..." autocomplete="off">
                     <button id="sendBtn" class="send-pill">
                         <span>Send</span>
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
                     </button>
                 </div>
             </div>
         </main>
     </div>
-
     <script type="module" src="app.js"></script>
 </body>
 </html>
