@@ -7,14 +7,16 @@ const assets = [
   'https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap'
 ];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(assets))
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open('zedo-v1').then((cache) => cache.addAll([
+      '/', '/index.html', '/style.css', '/app.js', '/icon-512.png'
+    ]))
   );
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((res) => res || fetch(e.request))
   );
 });
