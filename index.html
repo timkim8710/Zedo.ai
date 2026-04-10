@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zedo AI | Universal Core</title>
+    
+    <title>Zedo AI | Cosmic Knowledge & Private Data Vault</title>
+    <meta name="description" content="Zedo.core: The universal AI hub for syncing private logs and analyzing global knowledge. Secure, fast, and cosmic.">
+    <meta name="keywords" content="Zedo AI, Private Vault, Data Sync, Cosmic Core, AI Knowledge Base">
+    <meta name="author" content="Zedo Team">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Zedo AI | Cosmic Knowledge Core">
+    <meta property="og:description" content="Sync your private logs and explore global archives with Zedo.">
+    <meta property="og:image" content="https://zedo-6f33b.web.app/preview-image.png"> <meta property="og:url" content="https://zedo-6f33b.web.app/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Zedo AI",
+      "operatingSystem": "All",
+      "applicationCategory": "ProductivityApplication",
+      "description": "A cosmic AI interface for managing private and global data logs."
+    }
+    </script>
+
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -11,70 +32,13 @@
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
             <h1 class="logo-text">Zedo<span>.core</span></h1>
-            <p id="authStatusText">Initialize Neural Link</p>
+            <p id="authStatusText">Neural link required for indexing.</p>
             <button id="loginBtn" class="google-btn">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
                 <span id="btnText">Sign up with Google</span>
             </button>
             <p class="toggle-auth" id="authToggle">Already a Commander? <span>Log in</span></p>
         </div>
-    </div>
-
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="logo-container">
-                <h1 class="logo-text">Zedo<span>.core</span></h1>
-            </div>
-
-            <div class="sidebar-content">
-                <div class="section">
-                    <p class="section-label">Data Transmission</p>
-                    <label for="fileInput" class="import-card">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                        <span>Upload Private Log</span>
-                        <input type="file" id="fileInput" accept=".txt">
-                    </label>
-                </div>
-
-                <div class="section">
-                    <p class="section-label">Global Knowledge (Shared)</p>
-                    <ul id="globalNotesList" class="notes-stack global-style"></ul>
-                </div>
-
-                <div class="section">
-                    <p class="section-label">Private Vault</p>
-                    <ul id="notesList" class="notes-stack"></ul>
-                </div>
-            </div>
-
-            <div class="sidebar-footer" id="userSection" style="display:none;">
-                <div class="user-info">
-                    <img id="userPhoto" src="" alt="U">
-                    <span id="userName">Commander</span>
-                </div>
-                <button id="logoutBtn" class="logout-btn">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-                </button>
-            </div>
-        </aside>
-
-        <main class="workspace">
-            <div id="chatDisplay" class="chat-viewport">
-                <div class="welcome-banner">
-                    <h2>Core Online.</h2>
-                    <p>Analyzing both global data and your private logs.</p>
-                </div>
-            </div>
-
-            <div class="input-zone">
-                <div class="command-bar">
-                    <input type="text" id="userInput" placeholder="Ask Zedo anything..." autocomplete="off">
-                    <button id="sendBtn" class="send-pill">
-                        <span>Send</span>
-                    </button>
-                </div>
-            </div>
-        </main>
     </div>
     <script type="module" src="app.js"></script>
 </body>
