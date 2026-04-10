@@ -11,17 +11,29 @@ const firebaseConfig = {
     appId: "1:335247934923:web:5dbcdce9d4c29307e3e24e"
 };
 
+// Initialize
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const ZEDO_KEY = "AIzaSyAyx-HliTT8iy0qjQzZ5rlCXU_7R8ZwnAo";
 
+// Selectors
 const loginOverlay = document.getElementById('loginOverlay');
 const userSection = document.getElementById('userSection');
 const chatDisplay = document.getElementById('chatDisplay');
+const btnText = document.getElementById('btnText');
+const authToggle = document.getElementById('authToggle');
 
-// Auth Handlers
+// Auth Switcher UI
+let isSignup = true;
+authToggle.addEventListener('click', () => {
+    isSignup = !isSignup;
+    btnText.innerText = isSignup ? "Sign up with Google" : "Log in with Google";
+    authToggle.innerHTML = isSignup ? "Already a Commander? <span>Log in</span>" : "New to the Core? <span>Sign up</span>";
+});
+
+// Auth Listeners
 document.getElementById('loginBtn').addEventListener('click', () => signInWithPopup(auth, provider));
 document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
@@ -31,56 +43,79 @@ onAuthStateChanged(auth, (user) => {
         userSection.style.display = 'flex';
         document.getElementById('userName').textContent = user.displayName.split(' ')[0];
         document.getElementById('userPhoto').src = user.photoURL;
-        loadnotes();
+        loadNotes();
     } else {
         loginOverlay.style.display = 'flex';
         userSection.style.display = 'none';
     }
 });
 
-// Load Knowledge Base
-async function loadnotes() {
+// Load Private Logs
+async function loadNotes() {
+    const user = auth.currentUser;
+    if (!user) return;
     const list = document.getElementById('notesList');
     list.innerHTML = "";
-    const q = query(collection(db, "notes"), orderBy("timestamp", "desc"));
-    const snap = await getDocs(q);
-    snap.forEach(doc => {
-        const li = document.createElement('li');
-        li.textContent = `🪐 ${doc.data().name}`;
-        list.appendChild(li);
-    });
+    
+    try {
+        const q = query(collection(db, "users", user.uid, "notes"), orderBy("timestamp", "desc"));
+        const snap = await getDocs(q);
+        snap.forEach(doc => {
+            const li = document.createElement('li');
+            li.textContent = `🪐 ${doc.data().name}`;
+            list.appendChild(li);
+        });
+    } catch (e) { console.error("Load failed", e); }
 }
 
-// Upload Note
+// Private Upload
 document.getElementById('fileInput').addEventListener('change', async (e) => {
+    const user = auth.currentUser;
     const file = e.target.files[0];
-    if (!file) return;
+    if (!user || !file) return;
+
     const text = await file.text();
-    await addDoc(collection(db, "notes"), { name: file.name, content: text, timestamp: serverTimestamp() });
-    loadnotes();
+    await addDoc(collection(db, "users", user.uid, "notes"), {
+        name: file.name,
+        content: text,
+        timestamp: serverTimestamp()
+    });
+    loadNotes();
 });
 
 // Chat Analysis
 document.getElementById('sendBtn').addEventListener('click', async () => {
+    const user = auth.currentUser;
     const q = document.getElementById('userInput').value;
-    if (!q) return;
-    document.getElementById('userInput').value = "";
+    if (!q || !user) return;
     
-    appendMessage('user', q);
-    const typing = appendMessage('zedo', "Establishing neural link...");
+    document.getElementById('userInput').value = "";
+    const welcome = document.querySelector('.welcome-banner');
+    if (welcome) welcome.style.display = 'none';
 
-    const snap = await getDocs(collection(db, "notes"));
+    appendMessage('user', q);
+    const typing = appendMessage('zedo', "Processing neural stream...");
+
+    // Get only this user's logs
+    const snap = await getDocs(collection(db, "users", user.uid, "notes"));
     const context = snap.docs.map(d => d.data().content).join("\n\n");
 
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${ZEDO_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: `Context: ${context}\n\nUser: ${q}` }] }] })
-    });
+    try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${ZEDO_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                contents: [{ parts: [{ text: `You are Zedo. Use these logs to answer: ${context}\n\nUser: ${q}` }] }] 
+            })
+        });
 
-    const data = await res.json();
-    typing.remove();
-    appendMessage('zedo', data.candidates[0].content.parts[0].text);
+        const data = await res.json();
+        typing.remove();
+        appendMessage('zedo', data.candidates[0].content.parts[0].text);
+    } catch (e) {
+        typing.remove();
+        appendMessage('zedo', "Transmission failed. Core link unstable.");
+    }
 });
 
 function appendMessage(role, text) {
