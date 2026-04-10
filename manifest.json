@@ -1,16 +1,24 @@
 {
-  "name": "Zedo AI Core",
   "short_name": "Zedo",
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#000205",
-  "theme_color": "#00f2ff",
+  "name": "Zedo AI: Cosmic Core",
+  "description": "The universal AI hub for syncing private logs and analyzing global knowledge.",
   "icons": [
     {
       "src": "icon-512.png",
-      "sizes": "512x512",
       "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "start_url": "/index.html",
+  "background_color": "#000205",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#00f2ff",
+  "orientation": "portrait"
 }
