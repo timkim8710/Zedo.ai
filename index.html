@@ -7,39 +7,109 @@
     <title>Zedo AI | Cosmic Knowledge & Private Data Vault</title>
     <meta name="description" content="Zedo.core: The universal AI hub for syncing private logs and analyzing global knowledge. Secure, fast, and cosmic.">
     <meta name="keywords" content="Zedo AI, Private Vault, Data Sync, Cosmic Core, AI Knowledge Base">
-    <meta name="author" content="Zedo Team">
+    <meta name="theme-color" content="#00f2ff">
 
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Zedo AI | Cosmic Knowledge Core">
-    <meta property="og:description" content="Sync your private logs and explore global archives with Zedo.">
-    <meta property="og:image" content="https://zedo-6f33b.web.app/preview-image.png"> <meta property="og:url" content="https://zedo-6f33b.web.app/">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Zedo AI",
-      "operatingSystem": "All",
-      "applicationCategory": "ProductivityApplication",
-      "description": "A cosmic AI interface for managing private and global data logs."
-    }
-    </script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-512.png">
 
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
             <h1 class="logo-text">Zedo<span>.core</span></h1>
             <p id="authStatusText">Neural link required for indexing.</p>
             <button id="loginBtn" class="google-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
-                <span id="btnText">Sign up with Google</span>
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
+                <span>Sign up with Google</span>
             </button>
-            <p class="toggle-auth" id="authToggle">Already a Commander? <span>Log in</span></p>
+            <p class="toggle-auth">Authorized Access Only</p>
         </div>
     </div>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <h1 class="logo-text">Zedo<span>.core</span></h1>
+            </div>
+
+            <div class="sidebar-content">
+                <button id="installApp" class="install-pill" style="display:none;">
+                    <span>Download Zedo</span>
+                </button>
+
+                <div class="section">
+                    <p class="section-label">Data Transmission</p>
+                    <label for="fileInput" class="import-card">
+                        <span>Sync Private Log</span>
+                        <input type="file" id="fileInput" accept=".txt">
+                    </label>
+                </div>
+
+                <div class="section">
+                    <p class="section-label">Universal Archives (Global)</p>
+                    <ul id="globalNotesList" class="notes-stack global-style"></ul>
+                </div>
+
+                <div class="section">
+                    <p class="section-label">Personal Vault (Private)</p>
+                    <ul id="notesList" class="notes-stack"></ul>
+                </div>
+            </div>
+
+            <div class="sidebar-footer" id="userSection" style="display:none;">
+                <div class="user-info">
+                    <img id="userPhoto" src="" alt="">
+                    <span id="userName">Commander</span>
+                </div>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </aside>
+
+        <main class="workspace">
+            <div id="chatDisplay" class="chat-viewport">
+                <div class="welcome-banner">
+                    <h2>Core Online.</h2>
+                    <p>Analyzing global and private data streams.</p>
+                </div>
+            </div>
+
+            <div class="input-zone">
+                <div class="command-bar">
+                    <input type="text" id="userInput" placeholder="Ask Zedo..." autocomplete="off">
+                    <button id="sendBtn" class="send-pill">Send</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script type="module" src="app.js"></script>
+    <script>
+        // Service Worker & PWA Logic
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
+            });
+        }
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installApp').style.display = 'block';
+        });
+
+        document.getElementById('installApp').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt = null;
+                document.getElementById('installApp').style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
