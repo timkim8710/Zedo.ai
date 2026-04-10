@@ -1,303 +1,41 @@
-/* --- COSMIC CORE DESIGN SYSTEM --- */
 :root {
     --void-bg: #000205;
     --panel-bg: rgba(10, 15, 25, 0.95);
     --accent-blue: #00f2ff;
     --accent-gold: #ffcc00;
-    --accent-purple: #bc00ff;
     --text-main: #e0f2fe;
-    --text-dim: #94a3b8;
     --glass: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--void-bg); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; }
 
-body {
-    background: var(--void-bg);
-    color: var(--text-main);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    height: 100vh;
-    overflow: hidden;
-}
+/* AUTH */
+.login-overlay { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.login-box { padding: 50px; border-radius: 20px; background: var(--glass); border: 1px solid var(--accent-blue); text-align: center; }
+.google-btn { background: #fff; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: bold; margin: 20px auto; }
 
-/* --- AUTH GATEWAY --- */
-.login-overlay {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at center, #0a0f1a 0%, #000 100%);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* LAYOUT */
+.app-container { display: flex; height: 100vh; }
+.sidebar { width: 300px; background: var(--panel-bg); border-right: 1px solid rgba(255,255,255,0.1); padding: 20px; display: flex; flex-direction: column; }
+.logo-text { font-family: 'Orbitron'; letter-spacing: 2px; }
+.logo-text span { color: var(--accent-blue); }
 
-.login-box {
-    text-align: center;
-    padding: 60px;
-    border-radius: 30px;
-    background: var(--glass);
-    border: 1px solid var(--accent-blue);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 50px rgba(0, 242, 255, 0.1);
-}
+/* DATA LISTS */
+.section { margin-top: 25px; }
+.section-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; margin-bottom: 10px; }
+.notes-stack { list-style: none; }
+.notes-stack li { padding: 10px; background: var(--glass); margin-bottom: 5px; border-radius: 5px; font-size: 0.85rem; cursor: pointer; }
+.global-style li { border-left: 3px solid var(--accent-gold); }
 
-.google-btn {
-    margin: 30px auto 0;
-    padding: 12px 28px;
-    border-radius: 50px;
-    border: none;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    font-weight: 800;
-    background: #fff;
-    color: #000;
-    transition: 0.3s;
-}
+/* WORKSPACE */
+.workspace { flex: 1; display: flex; flex-direction: column; }
+.chat-viewport { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+.msg { max-width: 80%; padding: 15px; border-radius: 15px; }
+.msg.user { align-self: flex-end; background: #3b82f6; }
+.msg.zedo { align-self: flex-start; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); }
 
-.google-btn img { width: 20px; }
-.google-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,255,255,0.4); }
-
-.toggle-auth {
-    margin-top: 20px;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    cursor: pointer;
-}
-
-.toggle-auth span { color: var(--accent-blue); text-decoration: underline; }
-
-/* --- APP LAYOUT --- */
-.app-container {
-    display: flex;
-    height: 100vh;
-}
-
-/* --- SIDEBAR --- */
-.sidebar {
-    width: 320px;
-    background: var(--panel-bg);
-    backdrop-filter: blur(30px);
-    border-right: 1px solid var(--glass-border);
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.logo-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-    margin-bottom: 40px;
-}
-
-.logo-text span {
-    color: var(--accent-blue);
-    text-shadow: 0 0 15px var(--accent-blue);
-}
-
-.section { margin-bottom: 30px; }
-
-.section-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    margin-bottom: 12px;
-    font-weight: 800;
-}
-
-/* Import Card */
-.import-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    padding: 20px;
-    border: 1px dashed var(--accent-blue);
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-    background: rgba(0, 242, 255, 0.02);
-}
-
-.import-card:hover { background: rgba(0, 242, 255, 0.08); }
-#fileInput { display: none; }
-
-/* Note Lists */
-.notes-stack {
-    list-style: none;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.notes-stack li {
-    padding: 12px;
-    background: var(--glass);
-    border-radius: 10px;
-    margin-bottom: 8px;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    border: 1px solid transparent;
-    transition: 0.2s;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.notes-stack li:hover {
-    border-color: var(--accent-blue);
-    color: var(--text-main);
-    transform: translateX(5px);
-}
-
-/* Global Note Special Style */
-.global-style li {
-    border-left: 3px solid var(--accent-gold);
-    background: rgba(255, 204, 0, 0.05);
-}
-
-/* Sidebar Footer */
-.sidebar-footer {
-    margin-top: auto;
-    padding-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid var(--glass-border);
-}
-
-.user-info { display: flex; align-items: center; gap: 12px; }
-#userPhoto { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--accent-blue); }
-#userName { font-weight: 600; font-size: 0.9rem; }
-
-.logout-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: 0.3s;
-}
-.logout-btn:hover { color: #ff4d4d; }
-
-/* --- WORKSPACE & CHAT --- */
-.workspace {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: radial-gradient(circle at 50% 50%, #0a0f1a 0%, #000 100%);
-}
-
-.chat-viewport {
-    flex: 1;
-    padding: 40px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.welcome-banner {
-    text-align: center;
-    margin-top: 10vh;
-}
-
-.welcome-banner h2 { font-family: 'Orbitron', sans-serif; font-size: 2rem; margin-bottom: 10px; }
-.welcome-banner p { color: var(--text-dim); }
-
-.msg {
-    max-width: 75%;
-    padding: 16px 20px;
-    border-radius: 18px;
-    line-height: 1.6;
-    font-size: 0.95rem;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-.msg.user {
-    align-self: flex-end;
-    background: var(--accent-purple);
-    color: #fff;
-    border-bottom-right-radius: 4px;
-}
-
-.msg.zedo {
-    align-self: flex-start;
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    border-bottom-left-radius: 4px;
-}
-
-/* --- COMMAND BAR --- */
-.input-zone {
-    padding: 40px;
-    display: flex;
-    justify-content: center;
-}
-
-.command-bar {
-    width: 100%;
-    max-width: 800px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--glass-border);
-    padding: 10px 10px 10px 25px;
-    border-radius: 100px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    backdrop-filter: blur(15px);
-    transition: 0.3s;
-}
-
-.command-bar:focus-within { border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(0, 242, 255, 0.1); }
-
-#userInput {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: #fff;
-    outline: none;
-    font-size: 1rem;
-}
-
-.send-pill {
-    background: var(--accent-blue);
-    color: #000;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 50px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: 0.3s;
-}
-/* Add this to your existing style.css */
-.login-box {
-    animation: glowPulse 4s infinite alternate;
-}
-
-@keyframes glowPulse {
-    from { box-shadow: 0 0 20px rgba(0, 242, 255, 0.1); }
-    to { box-shadow: 0 0 40px rgba(0, 242, 255, 0.3); }
-}
-
-/* Mobile Responsiveness for Google's Mobile-First Indexing */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 80px;
-        padding: 20px 10px;
-    }
-    .section-label, #userName, .logo-text span, .import-card span {
-        display: none;
-    }
-    .workspace {
-        flex: 1;
-    }
-}
+.input-zone { padding: 30px; }
+.command-bar { background: var(--glass); padding: 10px 20px; border-radius: 50px; display: flex; border: 1px solid rgba(255,255,255,0.1); }
+#userInput { flex: 1; background: transparent; border: none; color: #fff; outline: none; }
+.send-pill { background: var(--accent-blue); border: none; padding: 8px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; }
