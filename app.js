@@ -31,7 +31,7 @@ onAuthStateChanged(auth, (user) => {
         userSection.style.display = 'flex';
         document.getElementById('userName').textContent = user.displayName.split(' ')[0];
         document.getElementById('userPhoto').src = user.photoURL;
-        loadNotes();
+        loadnotes();
     } else {
         loginOverlay.style.display = 'flex';
         userSection.style.display = 'none';
@@ -39,7 +39,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Load Knowledge Base
-async function loadNotes() {
+async function loadnotes() {
     const list = document.getElementById('notesList');
     list.innerHTML = "";
     const q = query(collection(db, "notes"), orderBy("timestamp", "desc"));
@@ -57,7 +57,7 @@ document.getElementById('fileInput').addEventListener('change', async (e) => {
     if (!file) return;
     const text = await file.text();
     await addDoc(collection(db, "notes"), { name: file.name, content: text, timestamp: serverTimestamp() });
-    loadNotes();
+    loadnotes();
 });
 
 // Chat Analysis
