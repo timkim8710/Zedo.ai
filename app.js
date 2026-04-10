@@ -17,9 +17,9 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const ZEDO_KEY = "AIzaSyAyx-HliTT8iy0qjQzZ5rlCXU_7R8ZwnAo";
 
+// Auth State
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        document.title = `Zedo | ${user.displayName.split(' ')[0]}'s Core`;
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('userSection').style.display = 'flex';
         document.getElementById('userName').textContent = user.displayName.split(' ')[0];
@@ -27,10 +27,47 @@ onAuthStateChanged(auth, (user) => {
         loadNotes("private");
         loadNotes("global");
     } else {
-        document.title = "Zedo AI | Cosmic Knowledge";
         document.getElementById('loginOverlay').style.display = 'flex';
-        document.getElementById('userSection').style.display = 'none';
     }
 });
 
-// ... Include your previous loadNotes, upload, and chat functions here ...
+document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
+document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+// Load Data
+async function loadNotes(type) {
+    const user = auth.currentUser;
+    const list = type === "private" ? document.getElementById('notesList') : document.getElementById('globalNotesList');
+    const path = type === "private" ? collection(db, "users", user.uid, "notes") : collection(db, "global_notes");
+    
+    list.innerHTML = "";
+    const snap = await getDocs(query(path, orderBy("timestamp", "desc")));
+    snap.forEach(doc => {
+        const li = document.createElement('li');
+        li.textContent = doc.data().name;
+        list.appendChild(li);
+    });
+}
+
+// Chat with Gemini
+document.getElementById('sendBtn').onclick = async () => {
+    const q = document.getElementById('userInput').value;
+    if (!q) return;
+    document.getElementById('userInput').value = "";
+    
+    const display = document.getElementById('chatDisplay');
+    display.innerHTML += `<div class="msg user">${q}</div>`;
+
+    const pSnap = await getDocs(collection(db, "users", auth.currentUser.uid, "notes"));
+    const gSnap = await getDocs(collection(db, "global_notes"));
+    const context = [...pSnap.docs, ...gSnap.docs].map(d => d.data().content).join("\n");
+
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${ZEDO_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: `Context: ${context}\n\nQuestion: ${q}` }] }] })
+    });
+    const data = await res.json();
+    display.innerHTML += `<div class="msg zedo">${data.candidates[0].content.parts[0].text}</div>`;
+    display.scrollTop = display.scrollHeight;
+};
